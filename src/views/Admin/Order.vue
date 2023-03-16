@@ -5,7 +5,7 @@
         <CCard>
           <CCardBody>
             <CRow class="mb-2">
-              <CCol :md="4">
+              <CCol :md="3">
                 <CForm @submit="findOrder">
                   <label>Tên hoặc số điện thoại cần tìm</label>
                   <CInputGroup>
@@ -17,11 +17,15 @@
                 </CForm>
               </CCol>
               <CCol :md="2">
+                <label>Chi nhánh</label>
+                <CFormSelect v-model="storeFilter" :options="stores" class="mb-2" />
+              </CCol>
+              <CCol :md="2">
                 <label>Trạng thái</label>
                 <CFormSelect v-model="stateFilter"
                   :options="['Đang xử lý', 'Đã giao', 'Tất cả', 'Sửa được', 'Không sửa được']" class="mb-2" />
               </CCol>
-              <CCol :md="4">
+              <CCol :md="3">
                 <label>Khoảng thời gian</label>
                 <VueDatePicker v-model="dateFilter" range locale="vi" cancel-text="Hủy" select-text="Chọn"
                   :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" size="sm" class="p-0" />
@@ -205,6 +209,7 @@ export default {
   data() {
     return {
       filterKeyword: '',
+      storeFilter: 'Tất cả',
       stateFilter: 'Tất cả',
       dateFilter: null,
       filterFrom: null,
@@ -229,11 +234,13 @@ export default {
       printObject: {
         id: 'printPage',
         popTitle: '',
-      }
+      },
+      stores: ['Tất cả']
     };
   },
   async created() {
     window.localStorage.getItem('token') ? this.findOrder(null, 1) : this.$notify({ text: 'Đăng nhập để sử dụng', type: 'error' })
+    this.getStore()
   },
   methods: {
     getColorType(type) {
@@ -253,6 +260,29 @@ export default {
       if (state === 'Đã giao')
         return 'success'
     },
+    async getStore() {
+      try {
+        const { data } = await axios.get('/store')
+        // console.log(data)
+        let arr = []
+        for (const index in data) {
+          // console.log(data[index])
+          arr.push({
+            label: data[index].name,
+            value: data[index]._id,
+          })
+        }
+        // console.log(arr)
+        this.stores = this.stores.concat(arr)
+      }
+      catch (error) {
+        // console.error(error)
+        this.$notify({
+          text: error.response.data.message,
+          type: 'error'
+        })
+      }
+    },
     async findOrder(e, page) {
       try {
         // console.log(e, page)
@@ -261,7 +291,7 @@ export default {
         // console.log(this.stateFilter)
         const from = this.dateFilter ? this.dateFilter[0] : null
         const to = this.dateFilter ? this.dateFilter[1] : null
-        const { data } = await axios.get('/order/page/' + page + '?store=' + this.store + '&state=' + this.stateFilter + '&from=' + from + '&to=' + to + '&keyword=' + this.filterKeyword)
+        const { data } = await axios.get('/order/page/' + page + '?store=' + this.storeFilter + '&state=' + this.stateFilter + '&from=' + from + '&to=' + to + '&keyword=' + this.filterKeyword)
         // console.log(data)
         this.docs = data.docs
         this.totalDocs = data.totalDocs
