@@ -7,7 +7,7 @@
             <CForm @submit="findUserByPhoneNumber">
               <label>Số điện thoại</label>
               <CInputGroup class="mb-2">
-                <CFormInput v-model="user.phoneNumber" />
+                <CFormInput type="number" v-model="user.phoneNumber" />
                 <CButton color="secondary" @click="() => { user.name = '', user.phoneNumber = '' }">
                   <CIcon name="cil-backspace" />
                 </CButton>

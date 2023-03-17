@@ -33,6 +33,24 @@ const routes = [
         ],
       },
       {
+        path: '/provider',
+        name:'Nhà cung cấp',
+        redirect: '/provider/new',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          },
+        },
+        children: [
+          {
+            path: '/provider/new',
+            name: 'Thêm nhà cung cấp mới',
+            meta: { requiresAuth: true },
+            component: () => import('@/views/Shop/Provider/New.vue'),
+          },
+        ],
+      },
+      {
         path: '/admin',
         component: {
           render() {

@@ -9,7 +9,7 @@
                 <CForm @submit="findOrder">
                   <label>Tên hoặc số điện thoại cần tìm</label>
                   <CInputGroup>
-                    <CFormInput v-model="filterKeyword" />
+                    <CFormInput type="number" v-model="filterKeyword" />
                     <CButton color="secondary" @click="() => { filterKeyword = '', findOrder(null, 1) }">
                       <CIcon name="cil-backspace" />
                     </CButton>

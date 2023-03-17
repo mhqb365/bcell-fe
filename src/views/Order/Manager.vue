@@ -76,7 +76,7 @@
             <CForm @submit="findUserByPhoneNumber">
               <label class="mb-2">Số điện thoại</label>
               <CInputGroup class="mb-2">
-                <CFormInput v-model="docForEdit.phoneNumber" />
+                <CFormInput type="number" v-model="docForEdit.phoneNumber" />
                 <CButton color="secondary" @click="() => { docForEdit.name = '', docForEdit.phoneNumber = '' }">
                   <CIcon name="cil-backspace" />
                 </CButton>
@@ -136,7 +136,7 @@
                 <CForm @submit="findOrder">
                   <label>Tên hoặc số điện thoại cần tìm</label>
                   <CInputGroup>
-                    <CFormInput v-model="filterKeyword" />
+                    <CFormInput type="number" v-model="filterKeyword" />
                     <CButton color="secondary" @click="() => { filterKeyword = '', findOrder(null, 1) }">
                       <CIcon name="cil-backspace" />
                     </CButton>
