@@ -384,7 +384,7 @@ export default {
       handlers: [],
       types: ['Sửa chữa', 'Bảo hành', 'Hỗ trợ'],
       times: ['Trong ngày', '2-3 ngày', '3-5 ngày', 'Hơn 5 ngày'],
-      states: ['Mới nhận', 'Đang xử lý', 'Chờ linh kiện', 'Hoàn thành', 'Không sửa được', 'Chưa gọi được khách', 'Chờ khách báo lại', 'Chờ khách lấy', 'Đã giao', 'Hủy bỏ'],
+      states: ['Mới nhận', 'Đang xử lý', 'Chưa gọi được khách', 'Chờ linh kiện', 'Chờ khách báo lại', 'Chờ khách lấy - sửa được', 'Chờ khách lấy - không sửa được', 'Đã giao - sửa được', 'Đã giao - không sửa được', 'Hủy bỏ'],
       printObject: {
         id: 'printPage',
         popTitle: '',
@@ -416,12 +416,12 @@ export default {
         return 'primary'
       if (state === 'Chờ linh kiện' || state === 'Chưa gọi được khách' || state === 'Chờ khách báo lại')
         return 'warning'
-      if (state === 'Hoàn thành' || state === 'Chờ khách lấy')
+      if (state === 'Chờ khách lấy - sửa được')
         return 'info'
-      if (state === 'Không sửa được' || state === 'Hủy bỏ')
-        return 'danger'
-      if (state === 'Đã giao')
+      if (state === 'Đã giao - sửa được')
         return 'success'
+      if (state === 'Chờ khách lấy - không sửa được' || state === 'Đã giao - không sửa được' || state === 'Hủy bỏ')
+        return 'danger'
     },
     async findMember() {
       try {
