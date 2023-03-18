@@ -104,7 +104,8 @@
             </div>
           </CCol>
           <CCol :md="4">
-            <CFormInput type="number" label="Báo giá *" v-model="cost" class="mb-2" />
+            <label class="mb-2">Chi phí</label>
+            <h3 class="mb-2 mt-1">{{ Number(cost).toLocaleString('vi-VN') }}</h3>
             <CFormSelect label="Thời gian" v-model="docForEdit.time" :options="times" class="mb-2" />
             <CFormSelect label="Người xử lý" v-model="docForEdit.handler._id" :options="handlers" class="mb-2" />
             <CFormSelect label="Trạng thái" v-model="docForEdit.state" :options="states" class="mb-2" />
@@ -113,15 +114,13 @@
             <CFormInput type="number" label="Số tiền thanh toán" v-model="docForEdit.payment.amount" class="mb-2" />
           </CCol>
           <CCol :md="6">
-            <div class=" mt-3">
-              <CButton color="primary" class="mx-2" @click="updateOrder" :disabled="updateOrderLoading">
-                Lưu
-              </CButton>
-              <CButton color="danger" class="mx-2 text-white"
-                @click="() => { docForEdit = null, visibleUpdateOrder = false }">
-                Hủy
-              </CButton>
-            </div>
+            <CButton color="primary" @click="updateOrder" :disabled="updateOrderLoading">
+              Lưu
+            </CButton>
+            <CButton color="danger" class="mx-2 text-white"
+              @click="() => { docForEdit = {}, visibleUpdateOrder = false }">
+              Hủy
+            </CButton>
           </CCol>
         </CRow>
       </CCardBody>
@@ -131,12 +130,15 @@
       <CCol :md="12">
         <CCard>
           <CCardBody>
+            <CButton color="success" @click="() => { visibleNew = true }" class="text-white mb-2">
+              + Tạo phiếu mới
+            </CButton>
             <CRow class="mb-2">
               <CCol :md="4">
                 <CForm @submit="findOrder">
                   <label>Tên hoặc số điện thoại cần tìm</label>
                   <CInputGroup>
-                    <CFormInput type="number" v-model="filterKeyword" />
+                    <CFormInput v-model="filterKeyword" />
                     <CButton color="secondary" @click="() => { filterKeyword = '', findOrder(null, 1) }">
                       <CIcon name="cil-backspace" />
                     </CButton>
@@ -155,7 +157,6 @@
               </CCol>
               <CCol :md="2" class="pt-1">
                 <CButton color="primary" :disabled="orderLoading" @click="findOrder(null, 1)" class="mt-3 w-100">
-                  <CIcon name="cil-sync" />
                   Lọc kết quả
                 </CButton>
               </CCol>
@@ -317,21 +318,32 @@
         <CButton v-print="printObject" color="primary">IN PHIẾU</CButton>
       </CModalFooter>
     </CModal>
+
+    <CModal backdrop="static" alignment="center" size="xl" :scrollable="true" :visible="visibleNew"
+      @close="() => { visibleNew = false, findOrder(null, 1) }">
+      <CModalHeader>
+        <CModalTitle>Tạo phiếu mới</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <New />
+      </CModalBody>
+    </CModal>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import moment from 'moment'
-import VueDatePicker from '@vuepic/vue-datepicker';
+import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import ConfigAccess from '@/components/Order/ConfigAccessModal.vue';
-import Log from '@/components/Order/Log.vue';
-import PrintPage from '@/components/Order/PrintPage.vue';
+import ConfigAccess from '@/components/Order/ConfigAccessModal.vue'
+import Log from '@/components/Order/Log.vue'
+import PrintPage from '@/components/Order/PrintPage.vue'
+import New from './New.vue'
 
 export default {
   moment,
-  components: { VueDatePicker, ConfigAccess, Log, PrintPage },
+  components: { VueDatePicker, ConfigAccess, Log, PrintPage, New },
   data() {
     return {
       store: localStorage.getItem("store"),
@@ -344,14 +356,15 @@ export default {
       updateOrderLoading: false,
       docs: [],
       totalDocs: 0,
+      totalPages: null,
       prevPage: null,
       page: 1,
-      totalPages: null,
       nextPage: null,
       docForEdit: {},
       visibleConfiguration: false,
       visibleLogs: false,
       visiblePrint: false,
+      visibleNew: false,
       visibleUpdateOrder: false,
       handlers: [],
       types: ['Sửa chữa', 'Bảo hành', 'Hỗ trợ'],
@@ -363,8 +376,8 @@ export default {
       }
     };
   },
-  async created() {
-    window.localStorage.getItem('token') !== null ? (await this.findMember(), this.findOrder(null, 1)) : this.$notify({ text: 'Đăng nhập để sử dụng', type: 'error' })
+  created() {
+    window.localStorage.getItem('token') !== null ? (this.findMember(), this.findOrder(null, 1)) : this.$notify({ text: 'Đăng nhập để sử dụng', type: 'error' })
   },
   computed: {
     cost() {
@@ -409,7 +422,7 @@ export default {
         this.$notify({
           text: error.response.data.message,
           type: 'error'
-        });
+        })
       }
     },
     async findOrder(e, page) {

@@ -9,7 +9,7 @@
                 <CForm @submit="findOrder">
                   <label>Tên hoặc số điện thoại cần tìm</label>
                   <CInputGroup>
-                    <CFormInput type="number" v-model="filterKeyword" />
+                    <CFormInput v-model="filterKeyword" />
                     <CButton color="secondary" @click="() => { filterKeyword = '', findOrder(null, 1) }">
                       <CIcon name="cil-backspace" />
                     </CButton>
@@ -32,7 +32,6 @@
               </CCol>
               <CCol :md="2" class="pt-1">
                 <CButton color="primary" :disabled="orderLoading" @click="findOrder(null, 1)" class="mt-3 w-100">
-                  <CIcon name="cil-sync" />
                   Lọc kết quả
                 </CButton>
               </CCol>
@@ -197,11 +196,11 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
-import VueDatePicker from '@vuepic/vue-datepicker';
+import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import ConfigAccess from '@/components/Order/ConfigAccessModal.vue';
-import Log from '@/components/Order/Log.vue';
-import PrintPage from '@/components/Order/PrintPage.vue';
+import ConfigAccess from '@/components/Order/ConfigAccessModal.vue'
+import Log from '@/components/Order/Log.vue'
+import PrintPage from '@/components/Order/PrintPage.vue'
 
 export default {
   moment,

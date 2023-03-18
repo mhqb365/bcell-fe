@@ -8,7 +8,7 @@ const routes = [
     path: '/',
     name: 'BCell',
     component: DefaultLayout,
-    redirect: '/order/new',
+    redirect: '/order/manager',
     children: [
       {
         path: '/order',
@@ -18,12 +18,12 @@ const routes = [
           },
         },
         children: [
-          {
-            path: '/order/new',
-            name: 'Tạo phiếu mới',
-            meta: { requiresAuth: true },
-            component: () => import('@/views/Order/New.vue'),
-          },
+          // {
+          //   path: '/order/new',
+          //   name: 'Tạo phiếu mới',
+          //   meta: { requiresAuth: true },
+          //   component: () => import('@/views/Order/New.vue'),
+          // },
           {
             path: '/order/manager',
             name: 'Quản lý phiếu',
@@ -33,9 +33,8 @@ const routes = [
         ],
       },
       {
-        path: '/provider',
-        name:'Nhà cung cấp',
-        redirect: '/provider/new',
+        path: '/shop',
+        name: 'Hàng hóa',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -43,10 +42,16 @@ const routes = [
         },
         children: [
           {
-            path: '/provider/new',
-            name: 'Thêm nhà cung cấp mới',
+            path: '/shop/provider',
+            name: 'Nhà cung cấp',
             meta: { requiresAuth: true },
-            component: () => import('@/views/Shop/Provider/New.vue'),
+            component: () => import('@/views/Shop/Provider/Index.vue'),
+          },
+          {
+            path: '/shop/warehouse',
+            name: 'Kho hàng',
+            meta: { requiresAuth: true },
+            component: () => import('@/views/Shop/WareHouse/Index.vue'),
           },
         ],
       },

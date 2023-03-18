@@ -1,170 +1,132 @@
 <template>
-  <div class="small">
-    <CRow>
-      <CCol :md="3">
-        <CCard class="mb-3">
-          <CCardBody>
-            <CForm @submit="findUserByPhoneNumber">
-              <label>Số điện thoại</label>
-              <CInputGroup class="mb-2">
-                <CFormInput type="number" v-model="user.phoneNumber" />
-                <CButton color="secondary" @click="() => { user.name = '', user.phoneNumber = '' }">
-                  <CIcon name="cil-backspace" />
-                </CButton>
-              </CInputGroup>
-            </CForm>
-            <CFormInput v-model="user.name" label="Tên khách hàng *" class="mb-2" />
-          </CCardBody>
-        </CCard>
-      </CCol>
+  <CRow>
+    <CCol :md="3">
+      <CForm @submit="findUserByPhoneNumber">
+        <label class="mb-2">Số điện thoại</label>
+        <CInputGroup class="mb-2">
+          <CFormInput type="number" v-model="user.phoneNumber" />
+          <CButton color="secondary" @click="() => { user.name = '', user.phoneNumber = '' }">
+            <CIcon name="cil-backspace" />
+          </CButton>
+        </CInputGroup>
+      </CForm>
+      <CFormInput v-model="user.name" label="Tên khách hàng *" class="mb-2" />
+      <div class="mb-2">
+        <label class="mb-2">Ngày nhận</label>
+        <VueDatePicker v-model="order.createdAt" locale="vi" cancel-text="Hủy" select-text="Chọn"
+          :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"></VueDatePicker>
+      </div>
+      <CFormSelect label="Thời gian" v-model="order.time" :options="times" class="mb-2" />
+      <label class="mb-2">Báo giá</label>
+      <h3 class="mb-2 mt-1">{{ Number(cost).toLocaleString('vi-VN') }}</h3>
+    </CCol>
 
-      <CCol :md="9">
-        <CCard>
-          <CCardBody>
-            <CNav variant="tabs" role="tablist">
-              <CNavItem>
-                <CNavLink href="javascript:void(0);" :active="tabPaneActive === 1" @click="() => { tabPaneActive = 1 }">
-                  SỬA CHỮA
-                </CNavLink>
-              </CNavItem>
-              <!-- <CNavItem>
-                <CNavLink href="javascript:void(0);" :active="tabPaneActive === 2" @click="() => { tabPaneActive = 2 }">
-                  BÁN HÀNG
-                </CNavLink>
-              </CNavItem> -->
-            </CNav>
+    <CCol :md="4">
+      <CFormInput label="Số phiếu" v-model="order.ticketNumber" class="mb-2" />
+      <CFormInput label="Model máy *" v-model="order.model" class="mb-2" />
+      <CFormInput label="Serial number/Service tag" v-model="order.serialNumber" class="mb-2" />
+      <div class="mb-2">
+        <label class="mb-2">Cấu hình máy</label>
+        <CRow>
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>CPU</CInputGroupText>
+              <CFormInput v-model="order.configuration.cpu" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>RAM</CInputGroupText>
+              <CFormInput v-model="order.configuration.ram" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>Ổ cứng</CInputGroupText>
+              <CFormInput v-model="order.configuration.harddrive" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm">
+              <CInputGroupText>Khác</CInputGroupText>
+              <CFormInput v-model="order.configuration.other" />
+            </CInputGroup>
+          </CCol>
+        </CRow>
+      </div>
 
-            <CTabContent>
-              <CTabPane role="tabpanel" :visible="tabPaneActive === 1">
-                <CRow>
-                  <CCol :md="6" class="pt-2">
-                    <div class="mb-2">
-                      <label class="mb-2">Ngày nhận</label>
-                      <VueDatePicker v-model="order.createdAt" locale="vi" cancel-text="Hủy" select-text="Chọn"
-                        :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"></VueDatePicker>
-                    </div>
-                    <CFormInput label="Số phiếu" v-model="order.ticketNumber" size="sm" class="mb-2" />
-                    <CFormInput label="Model máy *" v-model="order.model" size="sm" class="mb-2" />
-                    <CFormInput label="Serial number/Service tag" v-model="order.serialNumber" size="sm" class="mb-2" />
+      <div class="mb-2">
+        <label class="mb-2">Phụ kiện</label>
+        <CRow class="mb-2">
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>Pin</CInputGroupText>
+              <CFormInput v-model="order.accessory.battery" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>Sạc</CInputGroupText>
+              <CFormInput v-model="order.accessory.adapter" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm" class="mb-1">
+              <CInputGroupText>Túi</CInputGroupText>
+              <CFormInput v-model="order.accessory.bag" />
+            </CInputGroup>
+          </CCol>
+          <CCol :md="6">
+            <CInputGroup size="sm">
+              <CInputGroupText>Khác</CInputGroupText>
+              <CFormInput v-model="order.accessory.other" />
+            </CInputGroup>
+          </CCol>
+        </CRow>
+      </div>
+    </CCol>
 
-                    <div class="mb-2">
-                      <label>Cấu hình máy</label>
-                      <CRow>
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>CPU</CInputGroupText>
-                            <CFormInput v-model="order.configuration.cpu" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>RAM</CInputGroupText>
-                            <CFormInput v-model="order.configuration.ram" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>Ổ cứng</CInputGroupText>
-                            <CFormInput v-model="order.configuration.harddrive" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm">
-                            <CInputGroupText>Khác</CInputGroupText>
-                            <CFormInput v-model="order.configuration.other" />
-                          </CInputGroup>
-                        </CCol>
-                      </CRow>
-                    </div>
+    <CCol :md="5">
+      <CFormSelect label="Yêu cầu" v-model="order.type" :options="types" class="mb-2" />
+      <CFormTextarea label="Tình trạng máy & ghi chú" v-model="order.description" rows="4" />
+      <label class="mt-2 mb-2">Hướng sửa chữa | Chi phí | Thời gian bảo hành</label>
+      <div v-for="[key, problem] in Object.entries(order.problems)" class="mb-1">
+        <CInputGroup size="sm">
+          <CFormInput v-model="problem.name" style="width: 40%" />
+          <CFormInput v-model="problem.cost" style="width: 20%;" />
+          <CFormInput v-model="problem.warranty" />
+          <CButton color="secondary" class="text-white" @click="() => { order.problems.splice(key, 1) }">
+            -
+          </CButton>
+        </CInputGroup>
+      </div>
+      <div class="mb-2">
+        <CBadge color="secondary" @click="() => { order.problems.push({ name: '', cost: 0, warranty: 0 }) }"
+          class="vue-pointer">
+          +
+        </CBadge>
+      </div>
+    </CCol>
 
-                    <div class="mb-2">
-                      <label>Phụ kiện</label>
-                      <CRow class="mb-2">
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>Pin</CInputGroupText>
-                            <CFormInput v-model="order.accessory.battery" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>Sạc</CInputGroupText>
-                            <CFormInput v-model="order.accessory.adapter" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm" class="mb-1">
-                            <CInputGroupText>Túi</CInputGroupText>
-                            <CFormInput v-model="order.accessory.bag" />
-                          </CInputGroup>
-                        </CCol>
-                        <CCol :md="6">
-                          <CInputGroup size="sm">
-                            <CInputGroupText>Khác</CInputGroupText>
-                            <CFormInput v-model="order.accessory.other" />
-                          </CInputGroup>
-                        </CCol>
-                      </CRow>
-                    </div>
-                  </CCol>
-
-                  <CCol :md="6" class="pt-2">
-                    <CFormSelect label="Yêu cầu" v-model="order.type" :options="types" class="mb-2" />
-                    <CFormTextarea label="Tình trạng máy & ghi chú *" v-model="order.description" rows="3" />
-                    <label class="mt-2 mb-2">Hướng sửa chữa | Chi phí | Thời gian bảo hành</label>
-                    <div v-for="[key, problem] in Object.entries(order.problems)" class="mb-1">
-                      <CInputGroup size="sm">
-                        <CFormInput v-model="problem.name" style="width: 40%" />
-                        <CFormInput v-model="problem.cost" style="width: 20%;" />
-                        <CFormInput v-model="problem.warranty" />
-                        <CButton color="secondary" class="text-white" @click="() => { order.problems.splice(key, 1) }">
-                          -
-                        </CButton>
-                      </CInputGroup>
-                    </div>
-                    <div class="mb-2">
-                      <CBadge color="secondary" @click="() => { order.problems.push({ name: '', cost: 0, warranty: 0 }) }"
-                        class="vue-pointer">
-                        +
-                      </CBadge>
-                    </div>
-                    <CFormInput type="number" label="Báo giá" v-model="cost" size="sm" class="mb-2" />
-                    <CFormSelect label="Thời gian" v-model="order.time" :options="times" size="sm" class="mb-2" />
-                  </CCol>
-
-                  <CCol :md="6">
-                    <div class="d-grid mt-3">
-                      <CButton color="primary" class="mx-4" size="lg" @click="addNewOrder" :disabled="isDisabledButton">
-                        TẠO PHIẾU
-                      </CButton>
-                    </div>
-                  </CCol>
-                </CRow>
-              </CTabPane>
-
-              <CTabPane role="tabpanel" :visible="tabPaneActive === 2">
-                Đang phát triển
-              </CTabPane>
-            </CTabContent>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+    <CCol :md="12">
+      <CButton color="primary" size="lg" @click="addNewOrder" :disabled="isDisabledButton">
+        TẠO PHIẾU
+      </CButton>
+    </CCol>
+  </CRow>
 
 
-    <CModal alignment="center" size="lg" :scrollable="true" :visible="visiblePrint"
-      @close="() => { visiblePrint = false }">
-      <CModalHeader>
-        <CModalTitle>In phiếu nhận</CModalTitle>
-      </CModalHeader>
-      <CModalBody id="printPage">
-        <PrintPage :printInfo="newTicket" :address="storeAddress" />
-      </CModalBody>
-      <CModalFooter>
-        <CButton v-print="printObject" color="primary">IN PHIẾU</CButton>
-      </CModalFooter>
-    </CModal>
-  </div>
+  <CModal alignment="center" size="lg" :scrollable="true" :visible="visiblePrint" @close="() => { visiblePrint = false }">
+    <CModalHeader>
+      <CModalTitle>In phiếu nhận</CModalTitle>
+    </CModalHeader>
+    <CModalBody id="printPage">
+      <PrintPage :printInfo="newTicket" :address="storeAddress" />
+    </CModalBody>
+    <CModalFooter>
+      <CButton v-print="printObject" color="primary">IN PHIẾU</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script>
@@ -241,9 +203,9 @@ export default {
   },
   async created() {
     this.store !== null ? (await this.findMember(), this.findStoreById()) : this.$notify({ text: 'Đăng nhập để sử dụng', type: 'error' })
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) this.order.createdAt = Date.now()
-    });
+    // document.addEventListener('visibilitychange', () => {
+    //   if (!document.hidden) this.order.createdAt = Date.now()
+    // });
   },
   methods: {
     async findMember() {

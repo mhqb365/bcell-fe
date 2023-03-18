@@ -6,18 +6,18 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'Tạo phiếu mới',
-    to: '/order/new',
-    icon: 'cil-note-add',
-    permission: 0,
-  },
-  {
-    component: 'CNavItem',
     name: 'Quản lý phiếu',
     to: '/order/manager',
     icon: 'cil-notes',
     permission: 0,
   },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Kho hàng',
+  //   to: '/shop/warehouse',
+  //   icon: 'cil-notes',
+  //   permission: 0,
+  // },
   {
     component: 'CNavItem',
     name: 'Đăng nhập',
@@ -44,4 +44,11 @@ export default [
     icon: 'cil-user',
     permission: 1,
   },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Nhà cung cấp',
+  //   to: '/shop/provider',
+  //   icon: 'cil-notes',
+  //   permission: 1,
+  // },
 ]
