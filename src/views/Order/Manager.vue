@@ -98,8 +98,13 @@
             </div>
             <div>
               <CBadge color="secondary" @click="() => { docForEdit.problems.push({ name: '', cost: 0, warranty: 0 }) }"
+                class="vue-pointer">
+                + sửa chữa
+              </CBadge>
+              <CBadge color="secondary"
+                @click="() => { docForEdit.problems.push({ name: 'Hóa đơn trực tiếp', cost: vat, warranty: 0 }) }"
                 class="vue-pointer mx-2">
-                +
+                + hóa đơn
               </CBadge>
             </div>
           </CCol>
@@ -166,7 +171,12 @@
               <ul class="pagination">
                 <li v-if="prevPage" class="page-item vue-pointer">
                   <a class="page-link button" @click="findOrder(null, prevPage)">
-                    Trang trước
+                    <CIcon name="cil-chevron-left" />
+                  </a>
+                </li>
+                <li v-if="page > 1" class="page-item vue-pointer">
+                  <a class="page-link button" @click="findOrder(null, 1)">
+                    1
                   </a>
                 </li>
                 <li class="page-item active">
@@ -174,9 +184,14 @@
                     {{ page }}{{ totalPages ? '/' + totalPages : '' }}
                   </a>
                 </li>
+                <li v-if="totalPages > 1 && page !== totalPages" class="page-item vue-pointer">
+                  <a class="page-link button" @click="findOrder(null, totalPages)">
+                    {{ totalPages }}
+                  </a>
+                </li>
                 <li v-if="nextPage" class="page-item vue-pointer">
                   <a class="page-link button" @click="findOrder(null, nextPage)">
-                    Trang sau
+                    <CIcon name="cil-chevron-right" />
                   </a>
                 </li>
               </ul>
@@ -233,13 +248,13 @@
                     </table>
                     <div>
                       <CBadge color="info" @click="() => { docForEdit = doc, visibleConfiguration = true }"
-                        class="mx-2 vue-pointer">
+                        class="vue-pointer">
                         Cấu hình
                       </CBadge>
-                      <CBadge color="info" @click="() => { docForEdit = doc, visibleLogs = true }"
+                      <!-- <CBadge color="info" @click="() => { docForEdit = doc, visibleLogs = true }"
                         class="mx-2 vue-pointer">
                         Lịch sử thay đổi
-                      </CBadge>
+                      </CBadge> -->
                       <CBadge color="info" @click="() => { docForEdit = doc, visiblePrint = true }"
                         class="mx-2 vue-pointer">
                         In phiếu
@@ -385,6 +400,9 @@ export default {
       let c = 0
       this.docForEdit.problems.map(item => c += Number(item.cost))
       return c
+    },
+    vat() {
+      return this.cost * 5 / 100
     }
   },
   methods: {

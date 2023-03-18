@@ -103,7 +103,7 @@
       <div class="mb-2">
         <CBadge color="secondary" @click="() => { order.problems.push({ name: '', cost: 0, warranty: 0 }) }"
           class="vue-pointer">
-          +
+          + sửa chữa
         </CBadge>
       </div>
     </CCol>

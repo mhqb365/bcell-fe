@@ -33,6 +33,8 @@ import {
   cilListLowPriority,
   cilUserPlus,
   cilPlus,
+  cilChevronLeft,
+  cilChevronRight
 } from '@coreui/icons'
 import { cifUs, cifBr, cifIn, cifFr, cifEs, cifPl } from '@coreui/icons'
 import {
@@ -153,6 +155,8 @@ export const iconsSet = Object.assign(
     cilListLowPriority,
     cilUserPlus,
     cilPlus,
+    cilChevronLeft,
+    cilChevronRight
   },
   {
     cifUs,

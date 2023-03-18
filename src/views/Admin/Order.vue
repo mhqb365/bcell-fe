@@ -41,7 +41,12 @@
               <ul class="pagination">
                 <li v-if="prevPage" class="page-item vue-pointer">
                   <a class="page-link button" @click="findOrder(null, prevPage)">
-                    Trang trước
+                    <CIcon name="cil-chevron-left" />
+                  </a>
+                </li>
+                <li v-if="page > 1" class="page-item vue-pointer">
+                  <a class="page-link button" @click="findOrder(null, 1)">
+                    1
                   </a>
                 </li>
                 <li class="page-item active">
@@ -49,9 +54,14 @@
                     {{ page }}{{ totalPages ? '/' + totalPages : '' }}
                   </a>
                 </li>
+                <li v-if="totalPages > 1 && page !== totalPages" class="page-item vue-pointer">
+                  <a class="page-link button" @click="findOrder(null, totalPages)">
+                    {{ totalPages }}
+                  </a>
+                </li>
                 <li v-if="nextPage" class="page-item vue-pointer">
                   <a class="page-link button" @click="findOrder(null, nextPage)">
-                    Trang sau
+                    <CIcon name="cil-chevron-right" />
                   </a>
                 </li>
               </ul>
