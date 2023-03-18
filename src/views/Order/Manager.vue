@@ -251,10 +251,10 @@
                         class="vue-pointer">
                         Cấu hình
                       </CBadge>
-                      <!-- <CBadge color="info" @click="() => { docForEdit = doc, visibleLogs = true }"
+                      <CBadge color="info" @click="() => { docForEdit = doc, visibleLogs = true }"
                         class="mx-2 vue-pointer">
                         Lịch sử thay đổi
-                      </CBadge> -->
+                      </CBadge>
                       <CBadge color="info" @click="() => { docForEdit = doc, visiblePrint = true }"
                         class="mx-2 vue-pointer">
                         In phiếu
